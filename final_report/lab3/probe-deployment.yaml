@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab3-web-probes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lab3-web
+  template:
+    metadata:
+      labels:
+        app: lab3-web
+    spec:
+      containers:
+      - name: flask-app
+        image: lab3-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
